@@ -60,7 +60,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 题库2控制层： 不知道服务端代码版本更新，去做的上传代码1
+ * 题库2控制层： 服务端代码版本更新
  */
 @RestController
 @RequestMapping("tiku2")
