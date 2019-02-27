@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zbf.mapper.TiKuMapper">
+
+    <!--======================================题库==================================-->
+
+    <!--添加题库start-->
+    <insert id="xinZengTiKu" parameterType="map">
+        insert into lcg_tiku(id,tikuname,tikuzhuangtai,tikushuoming,createTime) values (
+          #{id},#{tikuname},#{tikuzhuangtai},#{tikushuoming},NOW()
+        )
+    </insert>
+    <!--添加题库end-->
+
+    <!--修改题库start-->
+    <update id="updateTiKu" parameterType="map">
+        update lcg_tiku
+        <set>
+            <if test="tikuname != null and tikuname != ''">
+                tikuname = #{tikuname},
+            </if>
+            <if test="tikuzhuangtai != null and tikuzhuangtai != ''">
+                tikuzhuangtai = #{tikuzhuangtai},
+            </if>
+            <if test="tikushuoming != null and tikushuoming != ''">
+                tikushuoming = #{tikushuoming},
+            </if>
+        </set>
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+        </where>
+    </update>
+    <!--修改题库end-->
+
+    <!--题库列表start-->
+    <select id="tiKuLieBiao" parameterType="page" resultType="map">
+        select tk.* from lcg_tiku tk
+        <where>
+            <if test="params.tikuname != null and params.tikuname != ''">
+                and tk.tikuname like concat("%",#{params.tikuname},"%")
+            </if>
+            <if test="params.tikuzhuangtai != null and params.tikuzhuangtai != ''">
+                and tk.tikuzhuangtai = #{params.tikuzhuangtai}
+            </if>
+        </where>
+        order by tk.createTime desc
+    </select>
+    <!--题库end-->
+
+    <!--删除题库start-->
+    <delete id="shanchutiku" parameterType="map">
+        delete from lcg_tiku where id = #{id}
+    </delete>
+    <!--删除题库end-->
+
+
+    <!--======================================试卷==================================-->
+    <!--新增试卷start-->
+    <insert id="addShiJuan" parameterType="map">
+        insert into
+        lcg_timu(id,createuserid,tixingid,tikuid,shitizhuangtai,nanduid,laiyuan,tigan,fenxi,daan,xuanxiang,xuanxiangmiaoshu,createtime)
+        values (
+          #{id},
+          #{createuserid},
+          #{tixingid},
+          #{tikuid},
+          #{shitizhuangtai},
+          #{nanduid},
+          #{laiyuan},
+          #{tigan},
+          #{fenxi},
+          #{daan},
+          #{xuanxiang},
+          #{xuanxiangmiaoshu},
+          NOW()
+        )
+    </insert>
+    <!--新增试卷end-->
+
+
+    <!--试卷列表start-->
+    <select id="shiJuanLeiBiao" parameterType="page" resultType="map">
+        select lu.userName,lt.tikuname,sj.* from lcg_timu sj
+        left join lcg_user lu on lu.id = sj.createuserid
+        left join lcg_tiku lt on lt.id = sj.tikuid
+        <where>
+            <if test="params.tigan != null and params.tigan != ''">
+                and sj.tigan like concat("%",#{params.tigan},"%")
+            </if>
+            <if test="params.tikuid != null and params.tikuid != ''">
+                and sj.tikuid = #{params.tikuid}
+            </if>
+            <if test="params.tixingid != null and params.tixingid != ''">
+                and sj.tixingid = #{params.tixingid}
+            </if>
+            <if test="params.nanduid != null and params.nanduid != ''">
+                and sj.nanduid = #{params.nanduid}
+            </if>
+            <if test="params.shitizhuangtai != null and params.shitizhuangtai != ''">
+                and sj.shitizhuangtai = #{params.shitizhuangtai}
+            </if>
+        </where>
+        order by sj.createtime desc
+    </select>
+    <!--试卷列表end-->
+
+
+    <!--题库数据导出start
+    select tm.tigan,tm.xuanxiang,tm.xuanxiangmiaoshu,tm.daan,tm.fenxi from lcg_timu as tm where tm.tikuid = #{params.tikuid}
+    -->
+    <select id="getTiKuShiTiByTiKuId" parameterType="page" resultType="map">
+        select tm.* from lcg_timu as tm where tm.tikuid = #{params.tikuid}
+    </select>
+    <!--题库数据导出end-->
+
+
+    <!--查寻试卷类型表中所有的试卷类型start-->
+    <select id="fenleiList" resultType="map">
+        select * from lcg_shijuan_fenlei
+    </select>
+    <!--查寻试卷类型表中所有的试卷类型end-->
+
+    <!--创建试卷start-->
+    <insert id="createKaoShiShiJuan" parameterType="map">
+        insert into lcg_shijuan
+        (id,fenleiid,zhuangtai,shijuanname,starttime,endtime,opentime,shijian,havedaan,shijuanleixing,xianshixingshi,shitishunxu,chuangjianren,shuoming,createtime)
+        values (
+          #{id},
+          #{fenleiid},
+          #{zhuangtai},
+          #{shijuanname},
+          #{starttime},
+          #{endtime},
+          #{opentime},
+          #{shijian},
+          #{havedaan},
+          #{shijuanleixing},
+          #{xianshixingshi},
+          #{shitishunxu},
+          #{chuangjianren},
+          #{shuoming},
+          NOW()
+        )
+    </insert>
+    <!--创建试卷end-->
+
+    <!--添加考试人员start-->
+    <insert id="addKaoShiRenYuan" parameterType="map">
+        insert into lcg_shijuan_user(id,shijuanid,userid) values (
+          #{id},
+          #{shijuanid},
+          #{userid}
+        )
+    </insert>
+    <!--添加考试人员end-->
+
+    <select id="manageKaoShiShiJuan" parameterType="page" resultType="map">
+        select count(lsu.id) kaoshirenshu,ls.* from lcg_shijuan ls
+	    left join lcg_shijuan_user lsu on lsu.shijuanid = ls.id
+	    GROUP BY lsu.shijuanid
+    </select>
+
+</mapper>
