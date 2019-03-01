@@ -16,6 +16,9 @@ import java.util.Map;
 
 @Mapper
 public interface TiKuMapper {
+	
+	//删除1
+	public int shan1(Map<String,Object> map);
 
     public int xinZengTiKu(Map<String,Object> map);
 

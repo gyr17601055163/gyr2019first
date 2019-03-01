@@ -9,7 +9,7 @@ package com.zbf.entity;
 
 import lombok.Data;
 import org.apache.solr.client.solrj.beans.Field;
-
+//品味
 @Data
 public class TiMu {
 
